@@ -66,4 +66,15 @@ public class CalenderBean {
     public String toString() {
         return String.format("%d-%d-%d", year, month, day);
     }
+
+    public int compareTo(CalenderBean calenderBean) {
+        if (year != calenderBean.getYear()) {
+            return year > calenderBean.getYear() ? 1 : -1;
+        } else if (month != calenderBean.getMonth()) {
+            return month > calenderBean.getMonth() ? 1 : -1;
+        } else if (day != calenderBean.getDay()) {
+            return day > calenderBean.getDay() ? 1 : -1;
+        }
+        return 0;
+    }
 }

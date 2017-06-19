@@ -3,11 +3,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.sjl.calenderview.MainActivity">
 
-    <com.sjl.calenderlibrary.view.CalenderView
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnJump"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#cecece"/>
+        android:text="Jump" />
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></android.support.v4.view.ViewPager>
+
+    <com.sjl.calenderlibrary.view.CalenderItemView
+        android:id="@+id/calenderItemView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#cecece" />
+
+    <Button
+        android:id="@+id/btnPre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="上个月" />
+
+    <Button
+        android:id="@+id/btnNext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="下个月" />
 </LinearLayout>

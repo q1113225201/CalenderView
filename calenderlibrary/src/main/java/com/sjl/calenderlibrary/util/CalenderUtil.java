@@ -41,4 +41,34 @@ public class CalenderUtil {
     public static CalenderBean getCalender(int year, int month) {
         return getCalender(year, month, 1);
     }
+
+    /**
+     * 上个月
+     * @param year
+     * @param month
+     * @return
+     */
+    public static CalenderBean getPreCalender(int year,int month){
+        month--;
+        if(month<=0){
+            month=12;
+            year--;
+        }
+        return getCalender(year,month);
+    }
+
+    /**
+     * 下个月
+     * @param year
+     * @param month
+     * @return
+     */
+    public static CalenderBean getNextCalender(int year,int month){
+        month++;
+        if(month>12){
+            month=1;
+            year++;
+        }
+        return getCalender(year,month);
+    }
 }

@@ -61,13 +61,13 @@
             android:id="@+id/btnSetCurrentDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="设置当前日期" />
+            android:text="设置当前年月" />
 
         <Button
             android:id="@+id/btnSelectDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="设置选中日期" />
+            android:text="选中今日" />
 
     </LinearLayout>
 </ScrollView>

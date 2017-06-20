@@ -1,12 +1,15 @@
 package com.sjl.calenderlibrary.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sjl.calenderlibrary.R;
 import com.sjl.calenderlibrary.bean.CalenderBean;
 import com.sjl.calenderlibrary.util.CalenderUtil;
 
@@ -24,6 +27,20 @@ public class CalenderView extends ViewPager {
 
     private CalenderBean[] calenderBeans;
     private CalenderItemView[] calenderItemViews;
+    //头部字体颜色
+    private int headerTextColor;
+    //头部字体大小
+    private float headerTextSize;
+    //日期字体颜色
+    private int dateTextColor;
+    //日期字体大小
+    private float dateTextSize;
+    //选中背景色
+    private int selectBackColor;
+    //选中字体颜色
+    private int selectTextColor;
+    //选中字体大小
+    private float selectTextSize;
 
     public CalenderView(Context context) {
         this(context, null);
@@ -31,10 +48,11 @@ public class CalenderView extends ViewPager {
 
     public CalenderView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(attrs);
     }
 
-    private void init() {
+    private void init(AttributeSet attrs) {
+        initAttrs(attrs);
         initCalenderView();
         setAdapter(new PagerAdapter() {
             @Override
@@ -73,7 +91,7 @@ public class CalenderView extends ViewPager {
 
             @Override
             public void onPageSelected(int position) {
-                setPositionCalender(calenderBeans[position%3],position);
+                setPositionCalender(calenderBeans[position % 3], position);
                 getAdapter().notifyDataSetChanged();
                 if (onCalenderPageChangeListener != null) {
                     onCalenderPageChangeListener.onChange(getCurrentCalender());
@@ -94,17 +112,16 @@ public class CalenderView extends ViewPager {
         setCurrentItem(currentPosition);
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int height = 0;
-        if (getAdapter() != null) {
-            CalenderItemView calenderItemView = (CalenderItemView) getChildAt(0);
-            if (calenderItemView != null) {
-                height = calenderItemView.getMeasuredHeight();
-            }
-        }
-        setMeasuredDimension(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
+    private void initAttrs(AttributeSet attrs) {
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.CalenderView);
+        headerTextColor = typedArray.getColor(R.styleable.CalenderView_headerTextColorCV, Color.parseColor("#666666"));
+        headerTextSize = typedArray.getFloat(R.styleable.CalenderView_headerTextSizeCV, 12);
+        dateTextColor = typedArray.getColor(R.styleable.CalenderView_dateTextColorCV, Color.parseColor("#333333"));
+        dateTextSize = typedArray.getFloat(R.styleable.CalenderView_dateTextSizeCV, 15);
+        selectBackColor = typedArray.getColor(R.styleable.CalenderView_selectBackColorCV, Color.parseColor("#dcbc94"));
+        selectTextColor = typedArray.getColor(R.styleable.CalenderView_selectBackColorCV, Color.WHITE);
+        selectTextSize = typedArray.getFloat(R.styleable.CalenderView_dateTextSizeCV, dateTextSize);
+        typedArray.recycle();
     }
 
     private void initCalenderView() {
@@ -112,8 +129,15 @@ public class CalenderView extends ViewPager {
         calenderBean = CalenderUtil.getCalender(calenderBean.getYear(), calenderBean.getMonth());
         calenderBeans = new CalenderBean[]{calenderBean, CalenderUtil.getNextCalender(calenderBean.getYear(), calenderBean.getMonth()), CalenderUtil.getPreCalender(calenderBean.getYear(), calenderBean.getMonth())};
         calenderItemViews = new CalenderItemView[calenderBeans.length];
-        for (int i = 0; i < calenderBeans.length; i++) {
-            CalenderItemView calenderItemView = new CalenderItemView(getContext());
+        for (int i = 0; i < calenderItemViews.length; i++) {
+            CalenderItemView calenderItemView = calenderItemViews[i] == null ? new CalenderItemView(getContext()) : calenderItemViews[i];
+            calenderItemView.setHeaderTextColor(headerTextColor);
+            calenderItemView.setHeaderTextSize(headerTextSize);
+            calenderItemView.setDateTextColor(dateTextColor);
+            calenderItemView.setDateTextSize(dateTextSize);
+            calenderItemView.setSelectBackColor(selectBackColor);
+            calenderItemView.setSelectTextColor(selectTextColor);
+            calenderItemView.setSelectTextSize(selectTextSize);
             calenderItemView.setOnItemSelectListener(new CalenderItemView.OnItemSelectListener() {
                 @Override
                 public void onSelect(CalenderBean calenderBean) {
@@ -130,8 +154,22 @@ public class CalenderView extends ViewPager {
         }*/
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int height = 0;
+        if (getAdapter() != null) {
+            CalenderItemView calenderItemView = (CalenderItemView) getChildAt(0);
+            if (calenderItemView != null) {
+                height = calenderItemView.getMeasuredHeight();
+            }
+        }
+        setMeasuredDimension(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
+    }
+
     /**
      * 设置日历数组数据
+     *
      * @param calenderBean
      * @param position
      */
@@ -141,13 +179,14 @@ public class CalenderView extends ViewPager {
         calenderBeans[(position + 1) % 3] = CalenderUtil.getNextCalender(calenderBean.getYear(), calenderBean.getMonth());
         calenderBeans[(position - 1 + 3) % 3] = CalenderUtil.getPreCalender(calenderBean.getYear(), calenderBean.getMonth());
         for (int i = 0; i < calenderBeans.length; i++) {
-            calenderItemViews[i].setDate(calenderBeans[i].getYear(),calenderBeans[i].getMonth());
+            calenderItemViews[i].setDate(calenderBeans[i].getYear(), calenderBeans[i].getMonth());
             calenderItemViews[i].setSelectDate(-1);
         }
     }
 
     /**
      * 获取当前显示日历
+     *
      * @return
      */
     public CalenderBean getCurrentCalender() {
@@ -156,20 +195,22 @@ public class CalenderView extends ViewPager {
 
     /**
      * 设置当前显示日历
+     *
      * @param calenderBean
      */
     public void setCurrentCalender(CalenderBean calenderBean) {
         calenderBean = CalenderUtil.getCalender(calenderBean.getYear(), calenderBean.getMonth());
         int result = calenderBean.compareTo(CalenderUtil.getCalender(getCurrentCalender().getYear(), getCurrentCalender().getMonth()));
-        if(result!=0){
+        if (result != 0) {
             calenderBeans[(getCurrentItem() + result) % 3] = calenderBean;
-            setPositionCalender(calenderBean,getCurrentItem() + result);
+            setPositionCalender(calenderBean, getCurrentItem() + result);
             setCurrentItem(getCurrentItem() + result);
         }
     }
 
     /**
      * 获取选中日期
+     *
      * @return
      */
     public CalenderBean getSelectDate() {

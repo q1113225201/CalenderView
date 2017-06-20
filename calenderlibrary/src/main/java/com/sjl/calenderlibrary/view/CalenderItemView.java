@@ -50,14 +50,14 @@ public class CalenderItemView extends View {
     //头部字体颜色
     private int headerTextColor;
     //头部字体大小
-    private int headerTextSize;
+    private float headerTextSize;
     //头部画笔
     private Paint headerPaint;
 
     //日期字体颜色
     private int dateTextColor;
     //日期字体大小
-    private int dateTextSize;
+    private float dateTextSize;
     //日期画笔
     private Paint datePaint;
 
@@ -68,7 +68,7 @@ public class CalenderItemView extends View {
     //选中字体颜色
     private int selectTextColor;
     //选中字体大小
-    private int selectTextSize;
+    private float selectTextSize;
     //选中项画笔
     private Paint selectItemPaint;
 
@@ -79,15 +79,15 @@ public class CalenderItemView extends View {
 
     private void initAttrs() {
         headerTextColor = Color.parseColor("#666666");
-        headerTextSize = sp2px(12);
+        headerTextSize = 12;
 
         dateTextColor = Color.parseColor("#333333");
-        dateTextSize = sp2px(15);
+        dateTextSize = 15;
 
         backColor = getDrawingCacheBackgroundColor();
         selectBackColor = Color.parseColor("#dcbc94");
         selectTextColor = Color.WHITE;
-        selectTextSize = sp2px(dateTextSize);
+        selectTextSize = dateTextSize;
 
         CalenderBean calenderBean = CalenderUtil.getCalender(new Date());
         this.year = calenderBean.getYear();
@@ -99,18 +99,18 @@ public class CalenderItemView extends View {
         //初始化头部画笔
         headerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         headerPaint.setColor(headerTextColor);
-        headerPaint.setTextSize(headerTextSize);
+        headerPaint.setTextSize(sp2px(headerTextSize));
 
         //初始化具体日期画笔
         datePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         datePaint.setColor(dateTextColor);
-        datePaint.setTextSize(dateTextSize);
+        datePaint.setTextSize(sp2px(dateTextSize));
 
         //初始化选中画笔
         selectItemPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         selectItemPaint.setColor(selectBackColor);
         selectItemPaint.setStrokeWidth(selectTextColor);
-        selectItemPaint.setTextSize(selectTextSize);
+        selectItemPaint.setTextSize(sp2px(selectTextSize));
     }
 
     @Override
@@ -153,10 +153,10 @@ public class CalenderItemView extends View {
         for (int i = 0; i < cols; i++) {
             for (int j = 0; j < rows; j++) {
                 if (dates[i][j] == preSelectDate) {
-                    drawItem(canvas, String.valueOf(dates[i][j]), itemWidth * j + itemWidth / 2, itemHeight * (i + 1) + itemHeight / 2, false);
+                    drawSelectItem(canvas, String.valueOf(dates[i][j]), itemWidth * j + itemWidth / 2, itemHeight * (i + 1) + itemHeight / 2, false);
                 }
                 if (dates[i][j] == selectDate) {
-                    drawItem(canvas, String.valueOf(dates[i][j]), itemWidth * j + itemWidth / 2, itemHeight * (i + 1) + itemHeight / 2, true);
+                    drawSelectItem(canvas, String.valueOf(dates[i][j]), itemWidth * j + itemWidth / 2, itemHeight * (i + 1) + itemHeight / 2, true);
                 } else if (dates[i][j] > 0) {
                     drawOneText(canvas, String.valueOf(dates[i][j]), itemWidth * j + itemWidth / 2, itemHeight * (i + 1) + itemHeight / 2, datePaint);
                 }
@@ -164,7 +164,16 @@ public class CalenderItemView extends View {
         }
     }
 
-    private void drawItem(Canvas canvas, String text, int centerX, int centerY, boolean isSelect) {
+    /**
+     * 绘制选中项
+     *
+     * @param canvas
+     * @param text
+     * @param centerX
+     * @param centerY
+     * @param isSelect
+     */
+    private void drawSelectItem(Canvas canvas, String text, int centerX, int centerY, boolean isSelect) {
         selectItemPaint.setColor(isSelect ? selectBackColor : backColor);
         canvas.drawCircle(centerX, centerY, Math.min(itemWidth, itemHeight) / 2, selectItemPaint);
         if (isSelect) {
@@ -218,6 +227,12 @@ public class CalenderItemView extends View {
         return super.onTouchEvent(event);
     }
 
+    /**
+     * 设置当前页年月
+     *
+     * @param year
+     * @param month
+     */
     public void setDate(int year, int month) {
         this.year = year;
         this.month = month;
@@ -226,7 +241,8 @@ public class CalenderItemView extends View {
     }
 
     /**
-     * 初始化日期
+     * 初始化年月
+     *
      * @param year
      * @param month
      */
@@ -257,14 +273,29 @@ public class CalenderItemView extends View {
         return month;
     }
 
+    /**
+     * 获取当前页年月
+     *
+     * @return
+     */
     public CalenderBean getCalenderBean() {
         return CalenderUtil.getCalender(year, month);
     }
 
+    /**
+     * 获取选中日
+     *
+     * @return
+     */
     public int getSelectDate() {
         return selectDate;
     }
 
+    /**
+     * 设置选中日
+     *
+     * @param selectDate
+     */
     public void setSelectDate(int selectDate) {
         this.selectDate = selectDate;
         invalidate();
@@ -274,6 +305,76 @@ public class CalenderItemView extends View {
         Resources r = Resources.getSystem();
         final float scale = r.getDisplayMetrics().density;
         return (int) (sp * scale + 0.5f);
+    }
+
+    public int getHeaderTextColor() {
+        return headerTextColor;
+    }
+
+    public void setHeaderTextColor(int headerTextColor) {
+        this.headerTextColor = headerTextColor;
+        initTools();
+        invalidate();
+    }
+
+    public float getHeaderTextSize() {
+        return headerTextSize;
+    }
+
+    public void setHeaderTextSize(float headerTextSize) {
+        this.headerTextSize = headerTextSize;
+        initTools();
+        invalidate();
+    }
+
+    public int getDateTextColor() {
+        return dateTextColor;
+    }
+
+    public void setDateTextColor(int dateTextColor) {
+        this.dateTextColor = dateTextColor;
+        initTools();
+        invalidate();
+    }
+
+    public float getDateTextSize() {
+        return dateTextSize;
+    }
+
+    public void setDateTextSize(float dateTextSize) {
+        this.dateTextSize = dateTextSize;
+        initTools();
+        invalidate();
+    }
+
+    public int getSelectBackColor() {
+        return selectBackColor;
+    }
+
+    public void setSelectBackColor(int selectBackColor) {
+        this.selectBackColor = selectBackColor;
+        initTools();
+        invalidate();
+    }
+
+    public int getSelectTextColor() {
+        return selectTextColor;
+    }
+
+    public void setSelectTextColor(int selectTextColor) {
+        this.selectTextColor = selectTextColor;
+        initTools();
+        invalidate();
+    }
+
+    public float getSelectTextSize() {
+        return selectTextSize;
+    }
+
+    public void setSelectTextSize(float selectTextSize) {
+        this.selectTextSize = selectTextSize;
+        initTools();
+        invalidate();
     }
 
     private OnItemSelectListener onItemSelectListener;

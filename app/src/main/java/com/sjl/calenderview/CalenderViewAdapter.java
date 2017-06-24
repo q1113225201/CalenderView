@@ -21,7 +21,7 @@ import java.util.List;
  */
 
 public class CalenderViewAdapter extends PagerAdapter {
-    private static final String TAG = "CalenderViewAdapter";
+
     private Context context;
     private List<CalenderBean> list;
     private List<CalenderItemView> viewList;
@@ -33,7 +33,7 @@ public class CalenderViewAdapter extends PagerAdapter {
     }
 
     private void initCalenderView() {
-        //只创建当前页和前一页后一页
+        //只创建当前页、前一页和后一页
         if (viewList == null) {
             viewList = new ArrayList<>();
             viewList.add(new CalenderItemView(context));
@@ -83,6 +83,10 @@ public class CalenderViewAdapter extends PagerAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * 设置当前页
+     * @param position
+     */
     public void setCurrentPosition(int position) {
         //当前页改变后，把其他两页的数据设置成当前页的前一页和后一页
         position = position % 3;

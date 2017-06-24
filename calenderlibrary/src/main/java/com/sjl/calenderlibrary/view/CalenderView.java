@@ -124,12 +124,17 @@ public class CalenderView extends ViewPager {
         typedArray.recycle();
     }
 
+    /**
+     * 初始化日历数据
+     */
     private void initCalenderView() {
         CalenderBean calenderBean = CalenderUtil.getCalender(new Date());
         calenderBean = CalenderUtil.getCalender(calenderBean.getYear(), calenderBean.getMonth());
+        //创建当月、下月、上月日历数据
         calenderBeans = new CalenderBean[]{calenderBean, CalenderUtil.getNextCalender(calenderBean.getYear(), calenderBean.getMonth()), CalenderUtil.getPreCalender(calenderBean.getYear(), calenderBean.getMonth())};
         calenderItemViews = new CalenderItemView[calenderBeans.length];
         for (int i = 0; i < calenderItemViews.length; i++) {
+            //初始化日历控件
             CalenderItemView calenderItemView = calenderItemViews[i] == null ? new CalenderItemView(getContext()) : calenderItemViews[i];
             calenderItemView.setHeaderTextColor(headerTextColor);
             calenderItemView.setHeaderTextSize(headerTextSize);
@@ -171,8 +176,11 @@ public class CalenderView extends ViewPager {
      */
     private void setPositionCalender(CalenderBean calenderBean, int position) {
         position = position % 3;
+        //当前月
         calenderBeans[position] = calenderBean;
+        //position后一个为下一月
         calenderBeans[(position + 1) % 3] = CalenderUtil.getNextCalender(calenderBean.getYear(), calenderBean.getMonth());
+        //position前一个为上一月
         calenderBeans[(position - 1 + 3) % 3] = CalenderUtil.getPreCalender(calenderBean.getYear(), calenderBean.getMonth());
         for (int i = 0; i < calenderBeans.length; i++) {
             calenderItemViews[i].setDate(calenderBeans[i].getYear(), calenderBeans[i].getMonth());

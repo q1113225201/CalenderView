@@ -145,6 +145,19 @@ public class CalenderItemView extends View {
     }
 
     /**
+     * 绘制一个文字
+     *
+     * @param canvas
+     * @param text
+     * @param centerX
+     * @param centerY
+     * @param paint
+     */
+    private void drawOneText(Canvas canvas, String text, int centerX, int centerY, Paint paint) {
+        float textWidth = paint.measureText(text);
+        canvas.drawText(text, centerX - textWidth / 2, centerY - (paint.descent() + paint.ascent()) / 2, paint);
+    }
+    /**
      * 日期绘制
      *
      * @param canvas
@@ -165,7 +178,7 @@ public class CalenderItemView extends View {
     }
 
     /**
-     * 绘制选中项
+     * 绘制选中项选中和未选中状态
      *
      * @param canvas
      * @param text
@@ -182,20 +195,6 @@ public class CalenderItemView extends View {
         }
     }
 
-    /**
-     * 绘制一个文字
-     *
-     * @param canvas
-     * @param text
-     * @param centerX
-     * @param centerY
-     * @param paint
-     */
-    private void drawOneText(Canvas canvas, String text, int centerX, int centerY, Paint paint) {
-        float textWidth = paint.measureText(text);
-        canvas.drawText(text, centerX - textWidth / 2, centerY - (paint.descent() + paint.ascent()) / 2, paint);
-    }
-
     private PointF startPoint;
 
     @Override
@@ -208,7 +207,7 @@ public class CalenderItemView extends View {
             float x = event.getX();
             float y = event.getY();
 //            Log.i(TAG,x+","+y);
-            //设置选中日期
+            //选中日期
             if (Math.abs(startPoint.x - x) < 20 && Math.abs(startPoint.y - y) < 20) {
                 for (int i = 0; i < cols; i++) {
                     for (int j = 0; j < rows; j++) {

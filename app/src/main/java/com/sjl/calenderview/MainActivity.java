@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.sjl.calenderlibrary.bean.CalenderBean;
 import com.sjl.calenderlibrary.util.CalenderUtil;
 import com.sjl.calenderlibrary.view.CalenderItemView;
+import com.sjl.calenderlibrary.view.CalenderView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,13 +20,13 @@ import java.util.List;
 public class MainActivity extends Activity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
     private TextView tvDate;
-    private CalenderItemView calenderItemView;
+    private TextView tvSelectDate;
+    private CalenderView calenderView;
+    private Button btnGetSelectDate;
+    private Button btnSetCurrentDate;
+    private Button btnSelectDate;
     private Button btnPre;
     private Button btnNext;
-    private Button btnJump;
-    private ViewPager viewPager;
-
-    private int year, month;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,88 +38,59 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private void initView() {
         tvDate = (TextView) findViewById(R.id.tvDate);
-        calenderItemView = (CalenderItemView) findViewById(R.id.calenderItemView);
+        tvSelectDate = (TextView) findViewById(R.id.tvSelectDate);
+        calenderView = (CalenderView) findViewById(R.id.calenderView);
+        calenderView.setOnItemSelectListener(new CalenderItemView.OnItemSelectListener() {
+            @Override
+            public void onSelect(CalenderBean calenderBean) {
+                tvSelectDate.setText(calenderBean.toString());
+            }
+        });
+        calenderView.setOnCalenderPageChangeListener(new CalenderView.OnCalenderPageChangeListener() {
+            @Override
+            public void onChange(CalenderBean calenderBean) {
+                tvDate.setText(String.format("%d-%d",calenderBean.getYear(),calenderBean.getMonth()));
+            }
+        });
+        calenderView.setCurrentCalender(CalenderUtil.getCalender(new Date()));
+        btnGetSelectDate = (Button) findViewById(R.id.btnGetSelectDate);
+        btnGetSelectDate.setOnClickListener(this);
+        btnSetCurrentDate = (Button) findViewById(R.id.btnSetCurrentDate);
+        btnSetCurrentDate.setOnClickListener(this);
+        btnSelectDate = (Button) findViewById(R.id.btnSelectDate);
+        btnSelectDate.setOnClickListener(this);
         btnPre = (Button) findViewById(R.id.btnPre);
         btnPre.setOnClickListener(this);
         btnNext = (Button) findViewById(R.id.btnNext);
         btnNext.setOnClickListener(this);
-        btnJump = (Button) findViewById(R.id.btnJump);
-        btnJump.setOnClickListener(this);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
 
+        //设置当前日期
         CalenderBean calenderBean = CalenderUtil.getCalender(new Date());
-        year = calenderBean.getYear();
-        month = calenderBean.getMonth();
-        tvDate.setText(year + "-" + month);
-
-        initViewPager();
-    }
-
-    private CalenderViewAdapter calenderViewAdapter;
-
-    private void initViewPager() {
-        initCalenderBeanList();
-        calenderViewAdapter = new CalenderViewAdapter(this, list);
-        viewPager.setAdapter(calenderViewAdapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                calenderViewAdapter.setCurrentPosition(position);
-                tvDate.setText(list.get(position%3).getYear()+","+list.get(position%3).getMonth());
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-        int currentPosition = Integer.MAX_VALUE/2;
-        if(currentPosition%3==2){
-            currentPosition++;
-        }else if(currentPosition%3==1){
-            currentPosition--;
-        }
-        viewPager.setCurrentItem(currentPosition);
-    }
-
-    private List<CalenderBean> list;
-
-    private void initCalenderBeanList() {
-        list = new ArrayList<>();
-        CalenderBean calenderBean = CalenderUtil.getCalender(new Date());
-        list.add(calenderBean);
-        list.add(CalenderUtil.getNextCalender(calenderBean.getYear(),calenderBean.getMonth()));
-        list.add(CalenderUtil.getPreCalender(calenderBean.getYear(),calenderBean.getMonth()));
+        calenderView.setCurrentCalender(calenderBean);
+        tvDate.setText(String.format("%d-%d",calenderBean.getYear(),calenderBean.getMonth()));
     }
 
     @Override
     public void onClick(View v) {
+        CalenderBean calenderBean;
         switch (v.getId()) {
+            case R.id.btnGetSelectDate:
+                calenderBean = calenderView.getSelectDate();
+                tvSelectDate.setText(calenderBean != null ? calenderBean.toString() : "null");
+                break;
+            case R.id.btnSetCurrentDate:
+                calenderView.setCurrentCalender(CalenderUtil.getCalender(new Date()));
+                break;
+            case R.id.btnSelectDate:
+                calenderView.setSelectDate(CalenderUtil.getCalender(new Date()));
+                break;
             case R.id.btnPre:
-                month--;
-                if (month <= 0) {
-                    month = 12;
-                    year--;
-                }
-                calenderItemView.setDate(year, month);
-                tvDate.setText(year + "-" + month);
+                calenderBean = calenderView.getCurrentCalender();
+                calenderView.setCurrentCalender(CalenderUtil.getPreCalender(calenderBean.getYear(), calenderBean.getMonth()));
                 break;
             case R.id.btnNext:
-                month++;
-                if (month >= 12) {
-                    month = 1;
-                    year++;
-                }
-                calenderItemView.setDate(year, month);
-                tvDate.setText(year + "-" + month);
-                break;
-            case R.id.btnJump:
-                startActivity(new Intent(this,CalenderViewActivity.class));
+                calenderBean = calenderView.getCurrentCalender();
+                calenderView.setCurrentCalender(CalenderUtil.getNextCalender(calenderBean.getYear(), calenderBean.getMonth()));
                 break;
         }
     }

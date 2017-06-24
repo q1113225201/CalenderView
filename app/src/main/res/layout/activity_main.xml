@@ -1,42 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.sjl.calenderview.MainActivity">
 
-    <TextView
-        android:id="@+id/tvDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btnJump"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Jump" />
+        android:orientation="vertical">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"></android.support.v4.view.ViewPager>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    <com.sjl.calenderlibrary.view.CalenderItemView
-        android:id="@+id/calenderItemView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#cecece" />
+            <Button
+                android:id="@+id/btnPre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="上个月" />
 
-    <Button
-        android:id="@+id/btnPre"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="上个月" />
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center" />
 
-    <Button
-        android:id="@+id/btnNext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="下个月" />
-</LinearLayout>
+            <Button
+                android:id="@+id/btnNext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="下个月" />
+        </LinearLayout>
+
+        <com.sjl.calenderlibrary.view.CalenderView
+            android:id="@+id/calenderView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:selectBackColorCV="#dcbc94"
+            app:headerTextSizeCV="18"
+            app:selectTextSizeCV="18"></com.sjl.calenderlibrary.view.CalenderView>
+
+        <TextView
+            android:id="@+id/tvSelectDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnSetCurrentDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设置当月日历" />
+
+        <Button
+            android:id="@+id/btnGetSelectDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="获取选中日期" />
+
+        <Button
+            android:id="@+id/btnSelectDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="选中今日" />
+
+    </LinearLayout>
+</ScrollView>

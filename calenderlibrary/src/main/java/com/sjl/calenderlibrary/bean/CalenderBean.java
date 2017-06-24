@@ -2,6 +2,7 @@ package com.sjl.calenderlibrary.bean;
 
 /**
  * CalenderBean
+ * 日历控件用到的对象（年，月，日，星期，当月天数）
  *
  * @author SJL
  * @date 2017/6/16

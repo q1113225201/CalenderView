@@ -114,12 +114,12 @@ public class CalenderView extends ViewPager {
 
     private void initAttrs(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.CalenderView);
-        headerTextColor = typedArray.getColor(R.styleable.CalenderView_headerTextColorCV, Color.parseColor("#666666"));
+        headerTextColor = typedArray.getColor(R.styleable.CalenderView_headerTextColorCV, Color.BLACK);
         headerTextSize = typedArray.getFloat(R.styleable.CalenderView_headerTextSizeCV, 12);
-        dateTextColor = typedArray.getColor(R.styleable.CalenderView_dateTextColorCV, Color.parseColor("#333333"));
+        dateTextColor = typedArray.getColor(R.styleable.CalenderView_dateTextColorCV, Color.GRAY);
         dateTextSize = typedArray.getFloat(R.styleable.CalenderView_dateTextSizeCV, 15);
-        selectBackColor = typedArray.getColor(R.styleable.CalenderView_selectBackColorCV, Color.parseColor("#dcbc94"));
-        selectTextColor = typedArray.getColor(R.styleable.CalenderView_selectBackColorCV, Color.WHITE);
+        selectBackColor = typedArray.getColor(R.styleable.CalenderView_selectBackColorCV, Color.CYAN);
+        selectTextColor = typedArray.getColor(R.styleable.CalenderView_selectTextColorCV, Color.WHITE);
         selectTextSize = typedArray.getFloat(R.styleable.CalenderView_dateTextSizeCV, dateTextSize);
         typedArray.recycle();
     }
@@ -148,10 +148,6 @@ public class CalenderView extends ViewPager {
             });
             calenderItemViews[i] = calenderItemView;
         }
-        /*for (int i = 0; i < list.size(); i++) {
-            CalenderBean calenderBean = viewList.get(i).getCalenderBean();
-            viewList.get(i).setDate(calenderBean.getYear(), calenderBean.getMonth());
-        }*/
     }
 
     @Override

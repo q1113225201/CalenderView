@@ -78,14 +78,14 @@ public class CalenderItemView extends View {
     }
 
     private void initAttrs() {
-        headerTextColor = Color.parseColor("#666666");
+        headerTextColor = Color.BLACK;
         headerTextSize = 12;
 
-        dateTextColor = Color.parseColor("#333333");
+        dateTextColor = Color.BLACK;
         dateTextSize = 15;
 
         backColor = getDrawingCacheBackgroundColor();
-        selectBackColor = Color.parseColor("#dcbc94");
+        selectBackColor = Color.CYAN;
         selectTextColor = Color.WHITE;
         selectTextSize = dateTextSize;
 
@@ -208,6 +208,7 @@ public class CalenderItemView extends View {
             float x = event.getX();
             float y = event.getY();
 //            Log.i(TAG,x+","+y);
+            //设置选中日期
             if (Math.abs(startPoint.x - x) < 20 && Math.abs(startPoint.y - y) < 20) {
                 for (int i = 0; i < cols; i++) {
                     for (int j = 0; j < rows; j++) {
